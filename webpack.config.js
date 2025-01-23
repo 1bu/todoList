@@ -1,38 +1,44 @@
 const { type } = require('os');
 const path = require('path');
-const htmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  mode: 'development', // Modo de desarrollo
+  entry: './src/index.js', // Archivo de entrada
   
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true, // Limpia la carpeta dist antes de generar nuevos archivos
   },
-  plugins:[
-    new htmlWebpackPlugin({
-        template: './src/index.html',
+  
+  devtool: 'inline-source-map', // Para facilitar la depuración
+  
+  devServer: {
+    static: './dist',
+  },
+  
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/template.html', // Archivo base para HTML
     }),
   ],
-  modules:{
-    rules:
-    [
-        {
-            test: /\.css$/,
-            use: [
-                'test: /\.css$/',
-                'use:[style-loader, css-loader]'
-            ],
-        },
-        {
-            test: /\.(png|svg|jpg|gif)$/,
-            type: 'asset/resource',
-        },
-        {
-            test: /\.(woff|woff2|eot|ttf|otf)$/i,
-            type: 'asset/resource',
-          },
+  
+  module: {
+    rules: [
+      {
+        test: /\.css$/, // Regla para archivos CSS
+        use: ['style-loader', 'css-loader'], // Cargadores para CSS
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/, // Regla para imágenes
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i, // Regla para fuentes
+        type: 'asset/resource',
+      },
     ],
   },
-  module:'development',
+
 };
