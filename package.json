@@ -284,5 +284,13 @@
     "webpack-dev-middleware": "^7.4.2",
     "watchpack": "^2.4.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1bu/todoList.git"
+  },
+  "bugs": {
+    "url": "https://github.com/1bu/todoList/issues"
+  },
+  "homepage": "https://github.com/1bu/todoList#readme",
   "description": ""
 }

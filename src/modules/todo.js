@@ -1,7 +1,12 @@
-function loadTodo(){
+import { projectList, getSelectedProjectId} from './list';
+import { save, loadListId } from './localStorageManager';
+
+//let todoList = [];
+
+export default function loadTodo(){
     //Todo Container
-    const todoList = document.createElement('div');
-    todoList.classList.add('todo-list');
+    const todoContainer = document.createElement('div');
+    todoContainer.classList.add('todo-container');
     
     const todoHeader = document.createElement('div');
     todoHeader.classList.add('todo-header');
@@ -11,45 +16,97 @@ function loadTodo(){
 
     const addTodoBtn = document.createElement('button');
     addTodoBtn.classList.add('add-todo');
-    addTodoBtn.setAttribute('data-open', true);
+    addTodoBtn.setAttribute('data-open', 'button');
     addTodoBtn.textContent = '+';
 
-    //Todo elements
-    const todo = document.createElement('div');
-    todo.classList.add('todo');
-
-    const todoMark = document.createElement('input');
-    todoMark.setAttribute('type', 'checkbox'); 
-    
-    const todoText = document.createElement('div');
-    todoText.classList.add('todo-text');
-
-    const todoTitle = document.createElement('h3');
-    todoTitle.textContent = 'task 1';
-    
-    const todoDate = document.createElement('p');
-    todoDate.textContent = 'Due Date: 2021-10-10';
-
-    const todoDelete = document.createElement('button');
-    todoDelete.classList.add('todo-delete');
-    todoDelete.textContent = 'x';
-
+    const todoElements = document.createElement('div');
+    todoElements.classList.add('todo-elements');
+ 
     //////Todo Container////////
     todoHeader.appendChild(taskTitleHeader);
     todoHeader.appendChild(addTodoBtn);
-    
-    todoText.appendChild(todoTitle);
-    todoText.appendChild(todoDate);
 
-    todo.appendChild(todoMark);
-    todo.appendChild(todoText);
-    todo.appendChild(todoDelete);
+    todoContainer.appendChild(todoHeader);
+    todoContainer.appendChild(todoElements);
 
-    todoList.appendChild(todoHeader);
-    todoList.appendChild(todo);
-
-    return todoList;
+    return todoContainer;
 }
 
-export default loadTodo;
+export function renderTodo(){
+    const todoElements = document.querySelector('.todo-elements');
+    todoElements.innerHTML = '';
+
+    let selectedProject = projectList.find(project => project.id === getSelectedProjectId());
+    if (!selectedProject){
+        selectedProject = projectList.find(project => project.id === loadListId())
+        if(!selectedProject) return null
+    };
+    
+    selectedProject.todos.forEach(todo =>{
+        const todoItem = document.createElement('div');
+        todoItem.classList.add('todo');
+        todoItem.setAttribute(['data-todo'], todo.id);
+
+        const todoCheck = document.createElement('input');
+        todoCheck.setAttribute('type', 'checkbox'); 
+        todoCheck.checked = todo.completed;
+        
+        const todoText = document.createElement('div');
+        todoText.classList.add('todo-text');
+
+        const todoTitle = document.createElement('h3');
+        todoTitle.textContent = todo.name;
+        
+        const todoDate = document.createElement('p');
+        todoDate.textContent = `Due Date: ${todo.dueDate}`;
+
+        const todoDelete = document.createElement('button');
+        todoDelete.classList.add('todo-delete');
+        todoDelete.textContent = 'x';
+
+        todoDelete.addEventListener('click', ()=>{
+            deleteTodo(todo);
+        })
+
+        todoCheck.addEventListener('click',(e)=>{
+            checkedTodo(e,selectedProject,todo);
+        })
+    
+        todoItem.appendChild(todoCheck);
+        todoItem.appendChild(todoText);
+        todoItem.appendChild(todoDelete);
+    
+        todoText.appendChild(todoTitle);
+        todoText.appendChild(todoDate);
+    
+        todoElements.appendChild(todoItem);
+    })
+    
+    save();
+}
+
+export function addTodo(todo){
+    const projects = projectList.find(project => project.id === getSelectedProjectId());
+
+    if(getSelectedProjectId() === null) return;
+
+    if(projects){
+        projects.todos.push(todo);
+        renderTodo();
+    }
+}
+
+export function deleteTodo(todo){
+    const projects = projectList.find(project => project.id === getSelectedProjectId());
+    projects.todos = projects.todos.filter(item => item.id !== todo.id);
+    renderTodo();
+}
+
+export function checkedTodo(ev,project,todo){
+    if(ev.target.tagName === 'INPUT'){
+        const selectedTodo = project.todos.find(todoList => todoList.id === todo.id);
+        selectedTodo.completed = ev.target.checked;
+        save()
+    };
+}
 

@@ -1,15 +1,20 @@
 import './style.css';
-import loadTodo from './modules/todo';
-import loadTask from './modules/task';
-import loadDialog from './modules/dialog';
+import loadTodo, {renderTodo} from './modules/todo';
+import loadList, {renderProjects} from './modules/list';
+import loadTodoDialog from './modules/todoDialog';
+import loadProjectDialog from './modules/projectsDialog';
 
 function init(){
     const content = document.getElementById('content');
-    content.classList.add('container');
     
-    content.appendChild(loadTask());
+    content.appendChild(loadList());
     content.appendChild(loadTodo());
-    content.appendChild(loadDialog());
+    content.appendChild(loadTodoDialog());
+    content.appendChild(loadProjectDialog());
+
+    renderProjects();
+    renderTodo();
+
 }
 
-init();
+document.addEventListener("DOMContentLoaded", init);

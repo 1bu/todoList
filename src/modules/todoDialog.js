@@ -1,7 +1,9 @@
-function loadDialog(){
+import  { addTodo } from './todo.js';
+
+function loadTodoDialog(){
     const dialog = document.createElement('dialog');
     dialog.classList.add('dialog');
-    dialog.setAttribute('data-modal', 'true');
+    dialog.setAttribute('data-modal', 'dialog');
 
     const dialogContainer = document.createElement('div');
     dialogContainer.classList.add('dialog-container');
@@ -42,23 +44,14 @@ function loadDialog(){
                             </select>
                         </div>
                     </div>
-                </form>`
-
-    const dialogCreate = document.createElement('button');
-    dialogCreate.classList.add('dialog-close');
-    dialogCreate.setAttribute('data-close', 'true');
-    dialogCreate.textContent = 'Create';
-
-    const dialogClose = document.createElement('button');
-    dialogClose.classList.add('dialog-close');
-    dialogClose.setAttribute('data-close', 'true');
-    dialogClose.textContent = 'x';
-    
-
-    dialogContainer.appendChild(dialogClose);
-    dialogContainer.appendChild(dialogCreate);
+                    <button type="submit">Create</button>
+                    <button type="button" class="dialog-close">X</button>
+                </form>`;
 
     dialog.appendChild(dialogContainer);
+
+    const dialogClose = dialogContainer.querySelector('.dialog-close');
+    const dialogForm = dialogContainer.querySelector('form');
 
     //Display the dialog
     document.addEventListener('click', (e) =>{
@@ -68,11 +61,35 @@ function loadDialog(){
         }
     });
     
+    //Close the dialog
     dialogClose.addEventListener('click', () =>{
         dialog.close();
+    });
+
+    dialogForm.addEventListener('submit',(e)=>{
+        e.preventDefault();
+
+        const todoName = document.getElementById('todo-name');
+        const todoDescription = document.getElementById('todo-description');
+        const todoDueDate = document.getElementById('todo-dueDate');
+        const todoPriority = document.getElementById('todo-priority');
+
+        const newTodo = {
+            id: new Date().getTime(),
+            name: todoName.value.trim(),
+            description: todoDescription.value.trim(),
+            dueDate: todoDueDate.value,
+            priority: todoPriority.value,
+            completed: false
+        }
+
+        addTodo(newTodo);
+        dialog.close();
+        dialogForm.reset();
+
     });
 
     return dialog
 }
 
-export default loadDialog;
+export default loadTodoDialog;
