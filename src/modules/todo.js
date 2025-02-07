@@ -1,5 +1,7 @@
 import { projectList, getSelectedProjectId} from './list';
 import { save, loadListId } from './localStorageManager';
+import add from '../asset/plus-solid.svg';
+import trash from '../asset/trash-solid.svg';
 
 //let todoList = [];
 
@@ -12,12 +14,12 @@ export default function loadTodo(){
     todoHeader.classList.add('todo-header');
 
     const taskTitleHeader = document.createElement('h2');
-    taskTitleHeader.textContent = 'Task';
+    taskTitleHeader.textContent = getProjectId();
 
     const addTodoBtn = document.createElement('button');
-    addTodoBtn.classList.add('add-todo');
+    addTodoBtn.classList.add('add-icon');
     addTodoBtn.setAttribute('data-open', 'button');
-    addTodoBtn.textContent = '+';
+    addTodoBtn.innerHTML = `<img src="${add}" alt="delete-icon">`;
 
     const todoElements = document.createElement('div');
     todoElements.classList.add('todo-elements');
@@ -36,16 +38,14 @@ export function renderTodo(){
     const todoElements = document.querySelector('.todo-elements');
     todoElements.innerHTML = '';
 
-    let selectedProject = projectList.find(project => project.id === getSelectedProjectId());
-    if (!selectedProject){
-        selectedProject = projectList.find(project => project.id === loadListId())
-        if(!selectedProject) return null
-    };
+    let selectedProject = getProjectId();
+    console.log(selectedProject);
     
     selectedProject.todos.forEach(todo =>{
         const todoItem = document.createElement('div');
         todoItem.classList.add('todo');
         todoItem.setAttribute(['data-todo'], todo.id);
+        todoItem.style.borderColor = changeColor(todo.priority);
 
         const todoCheck = document.createElement('input');
         todoCheck.setAttribute('type', 'checkbox'); 
@@ -58,11 +58,11 @@ export function renderTodo(){
         todoTitle.textContent = todo.name;
         
         const todoDate = document.createElement('p');
-        todoDate.textContent = `Due Date: ${todo.dueDate}`;
+        todoDate.textContent = `${todo.dueDate}`;
 
         const todoDelete = document.createElement('button');
-        todoDelete.classList.add('todo-delete');
-        todoDelete.textContent = 'x';
+        todoDelete.classList.add('icon-delete');
+        todoDelete.innerHTML = `<img src="${trash}" alt="delete-icon">`;
 
         todoDelete.addEventListener('click', ()=>{
             deleteTodo(todo);
@@ -110,3 +110,26 @@ export function checkedTodo(ev,project,todo){
     };
 }
 
+export function changeColor(todo){
+    if(todo === 'low-priority'){
+        return '#1E8252';
+    }
+    else if(todo === 'medium-priority'){
+        return '#EDAA25';
+    }
+    else if(todo === 'high-priority'){
+        return '#C43302'
+    }
+}
+
+export function getProjectId(){
+
+    let selectedProject = projectList.find(project => project.id === getSelectedProjectId());
+    if (!selectedProject){
+        selectedProject = projectList.find(project => project.id === loadListId())
+        if(!selectedProject) return null
+    };
+
+    console.log(selectedProject);
+    return selectedProject;
+}

@@ -1,5 +1,8 @@
 import { renderTodo } from "./todo";
 import { initialSetup, save, load, saveListId } from "./localStorageManager";
+import trash from '../asset/trash-solid.svg';
+import edit from '../asset/pen-to-square-solid.svg'
+import add from '../asset/plus-solid.svg'
 
 export let projectList = [];
 
@@ -21,9 +24,9 @@ function loadList(){
     projectTitle.innerText = 'Projects';
 
     const addListItem = document.createElement('button');
-    addListItem.classList.add('add-list-item');
+    addListItem.classList.add('add-icon');
     addListItem.setAttribute('project-data','button');
-    addListItem.textContent = '+';
+    addListItem.innerHTML = `<img src="${add}" alt="add-icon">`;
 
     //Task Container
     const list = document.createElement('div');
@@ -59,11 +62,12 @@ export function renderProjects(){
 
         const listItemEdit = document.createElement('button');
         listItemEdit.classList.add('list-edit');
-        listItemEdit.textContent = 'Edit';
+        listItemEdit.innerHTML = `<img src="${edit}" alt="edit-icon">`;
 
         const listItemDelete = document.createElement('button');
-        listItemDelete.classList.add('task-delete');
-        listItemDelete.textContent = 'x';
+        listItemDelete.classList.add('icon-delete');
+        listItemDelete.innerHTML = `<img src="${trash}" alt="delete-icon">`;
+
 
         listItemDelete.addEventListener('click', ()=>{
             deleteProject(project);
@@ -82,7 +86,6 @@ export function renderProjects(){
 
         projectElements.appendChild(listItem);        
     })
-    
 }
 
 export function saveAndRender(){
@@ -108,5 +111,6 @@ export function setSelectedProjectId(project){
 export function getSelectedProjectId(){
     return selectedProject;
 }
+
 
 export default loadList;

@@ -8,7 +8,15 @@ function loadProjectDialog(){
     const projectDialogContainer = document.createElement('div');
     projectDialogContainer.classList.add('dialog-container');
 
-    projectDialogContainer.innerHTML= `                
+    const projectHeader = document.createElement('div');
+    projectHeader.innerHTML = `
+        <h2>New Project</h2>
+        <p>Add a new project </p>`
+
+    const formContainer = document.createElement('div');
+    formContainer.classList.add('form-container');
+
+    formContainer.innerHTML= `                
                 <form method="dialog">
                     <div class="inputs">
                         <div class="row">
@@ -20,9 +28,15 @@ function loadProjectDialog(){
                                 required>
                         </div>
                     </div>
-                    <button type="submit">Create</button>
-                    <button type="button" class="dialogProject-close">X</button>
+                    <div class="btn-container">
+                        <button type="submit" class="create-btn">Create</button>
+                        <button type="button" class="dialogProject-close close-btn">Cancel</button>
+                    </div>
                 </form> `;
+
+
+    projectDialogContainer.appendChild(projectHeader);
+    projectDialogContainer.appendChild(formContainer);
     dialog.appendChild(projectDialogContainer);
 
     const dialogClose = projectDialogContainer.querySelector('.dialogProject-close');
@@ -43,21 +57,23 @@ function loadProjectDialog(){
 
     dialogForm.addEventListener('submit', (e)=>{
         e.preventDefault();
-
         const projectName = document.getElementById('project-name');
-
-        const newProject = {
-            id: new Date().getTime(),
-            name: projectName.value.trim(),
-            todos: []
-        };
-
-        addProject(newProject);
+        
+        newProject(projectName.value.trim())
         dialog.close();
         dialogForm.reset();
     })
 
     return dialog;
+}
+
+function newProject(name){
+    const project = {
+        id: new Date().getTime(),
+        name: name,
+        todos: []
+    };
+    addProject(project);
 }
 
 export default loadProjectDialog;

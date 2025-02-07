@@ -2,13 +2,20 @@ import  { addTodo } from './todo.js';
 
 function loadTodoDialog(){
     const dialog = document.createElement('dialog');
-    dialog.classList.add('dialog');
+    dialog.classList.add('todo-dialog');
     dialog.setAttribute('data-modal', 'dialog');
+    
+    const dialogHeader = document.createElement('div');
+    dialogHeader.classList.add('dialog-header');
 
-    const dialogContainer = document.createElement('div');
-    dialogContainer.classList.add('dialog-container');
+    dialogHeader.innerHTML = `
+        <h2>New Todo</h2>
+        <p>Adding a new to-do to keep it more organized</p>`
+    
+    const formContainer = document.createElement('div');
+    formContainer.classList.add('form-container');
 
-    dialogContainer.innerHTML = `                    
+    formContainer.innerHTML = `                    
                 <form method="dialog">
                     <div class="inputs">
                         <div class="row">
@@ -24,7 +31,8 @@ function loadTodoDialog(){
                             <label for="todo-description">Description</label>
                             <textarea name="todo-description"
                                     id="todo-description"
-                                    required></textarea>
+                                    required>
+                            </textarea>
                         </div>
 
                         <div class="row">
@@ -44,14 +52,16 @@ function loadTodoDialog(){
                             </select>
                         </div>
                     </div>
-                    <button type="submit">Create</button>
-                    <button type="button" class="dialog-close">X</button>
+                    <div class="btn-container">
+                        <button type="submit" class="create-btn">Create</button>
+                        <button type="button" class="dialog-close close-btn">Cancel</button>
+                    </div>
                 </form>`;
 
-    dialog.appendChild(dialogContainer);
-
-    const dialogClose = dialogContainer.querySelector('.dialog-close');
-    const dialogForm = dialogContainer.querySelector('form');
+    dialog.appendChild(dialogHeader)
+    dialog.appendChild(formContainer);
+    const dialogClose = formContainer.querySelector('.dialog-close');
+    const dialogForm = formContainer.querySelector('form');
 
     //Display the dialog
     document.addEventListener('click', (e) =>{
@@ -89,7 +99,7 @@ function loadTodoDialog(){
 
     });
 
-    return dialog
+    return dialog;
 }
 
 export default loadTodoDialog;
