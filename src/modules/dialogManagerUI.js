@@ -1,6 +1,48 @@
-import  { addTodo } from './todo.js';
+export function createProjectDialog(){
+    const dialog = document.createElement('dialog');
+    dialog.classList.add('project-dialog');
+    dialog.setAttribute('project-modal','dialog');
 
-function loadTodoDialog(){
+    const projectDialogContainer = document.createElement('div');
+    projectDialogContainer.classList.add('dialog-container');
+
+    const projectHeader = document.createElement('div');
+    projectHeader.innerHTML = `
+        <h2>New Project</h2>
+        <p>Add a new project </p>`
+
+    const formContainer = document.createElement('div');
+    formContainer.classList.add('form-container');
+
+    formContainer.innerHTML= `                
+                <form method="dialog">
+                    <div class="inputs">
+                        <div class="row">
+                            <label for="project-name">Project</label>
+                            <input type="text"
+                                name="project-name"
+                                id="project-name"
+                                autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="submit" class="create-btn">Create</button>
+                        <button type="button" class="dialog-close close-btn">Cancel</button>
+                    </div>
+                </form> `;
+
+
+    projectDialogContainer.appendChild(projectHeader);
+    projectDialogContainer.appendChild(formContainer);
+    dialog.appendChild(projectDialogContainer);
+
+    return dialog;
+}
+
+////////////////////////////TODO DIALOG////////////////
+
+export function createTodoDialog(){
     const dialog = document.createElement('dialog');
     dialog.classList.add('todo-dialog');
     dialog.setAttribute('data-modal', 'dialog');
@@ -60,46 +102,12 @@ function loadTodoDialog(){
 
     dialog.appendChild(dialogHeader)
     dialog.appendChild(formContainer);
-    const dialogClose = formContainer.querySelector('.dialog-close');
-    const dialogForm = formContainer.querySelector('form');
-
-    //Display the dialog
-    document.addEventListener('click', (e) =>{
-        const openBtn = e.target.closest('[data-open]');
-        if(openBtn){
-            dialog.showModal();
-        }
-    });
-    
-    //Close the dialog
-    dialogClose.addEventListener('click', () =>{
-        dialog.close();
-    });
-
-    dialogForm.addEventListener('submit',(e)=>{
-        e.preventDefault();
-
-        const todoName = document.getElementById('todo-name');
-        const todoDescription = document.getElementById('todo-description');
-        const todoDueDate = document.getElementById('todo-dueDate');
-        const todoPriority = document.getElementById('todo-priority');
-
-        const newTodo = {
-            id: new Date().getTime(),
-            name: todoName.value.trim(),
-            description: todoDescription.value.trim(),
-            dueDate: todoDueDate.value,
-            priority: todoPriority.value,
-            completed: false
-        }
-
-        addTodo(newTodo);
-        dialog.close();
-        dialogForm.reset();
-
-    });
 
     return dialog;
 }
 
-export default loadTodoDialog;
+export function loadDialogUI(){
+    const container = document.createElement('div');
+    container.append(createProjectDialog(), createTodoDialog());
+    return container;
+}

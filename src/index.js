@@ -1,19 +1,20 @@
 import './style.css';
-import loadTodo, {renderTodo} from './modules/todo';
-import loadList, {renderProjects} from './modules/list';
-import loadTodoDialog from './modules/todoDialog';
-import loadProjectDialog from './modules/projectsDialog';
+import {renderProjects} from './modules/list';
+import { loadListUI } from './modules/listUI';
+import {loadTodoUI, updateTodoHeader} from './modules/todoUI'
+import { loadDialogUI } from './modules/dialogManagerUI';
+import { initDialogEvent } from './modules/dialogManager';
 
 function init(){
     const content = document.getElementById('content');
     
-    content.appendChild(loadList());
-    content.appendChild(loadTodo());
-    content.appendChild(loadTodoDialog());
-    content.appendChild(loadProjectDialog());
+    content.appendChild(loadListUI());
+    content.appendChild(loadTodoUI());
+    content.append(loadDialogUI());
 
     renderProjects();
-    renderTodo();
+    updateTodoHeader()
+    initDialogEvent();
 
 }
 

@@ -1,96 +1,20 @@
-import { renderTodo } from "./todo";
-import { initialSetup, save, load, saveListId } from "./localStorageManager";
-import trash from '../asset/trash-solid.svg';
-import edit from '../asset/pen-to-square-solid.svg'
-import add from '../asset/plus-solid.svg'
+import { renderTodoUI } from "./todoUI";
+import { initialSetup, save, load, saveListId, loadListId } from "./localStorageManager";
+import { renderProjectsUI } from "./listUI";
 
 export let projectList = [];
-
 let selectedProject = null;
 
 initialSetup();
 projectList = load();
 
-function loadList(){
-    //Task List Container
-    const projectContainer = document.createElement('div');
-    projectContainer.classList.add('project-container');
-
-    //Task List Header
-    const projectListHeader = document.createElement('div');
-    projectListHeader.classList.add('project-list');
-    
-    const projectTitle = document.createElement('h2');
-    projectTitle.innerText = 'Projects';
-
-    const addListItem = document.createElement('button');
-    addListItem.classList.add('add-icon');
-    addListItem.setAttribute('project-data','button');
-    addListItem.innerHTML = `<img src="${add}" alt="add-icon">`;
-
-    //Task Container
-    const list = document.createElement('div');
-    list.classList.add('task-list');
-
-
-    //////Task List Container///////
-    projectListHeader.appendChild(projectTitle);
-    projectListHeader.appendChild(addListItem);
-
-    projectContainer.appendChild(projectListHeader);
-    projectContainer.appendChild(list);    
-
-    return projectContainer;
-}
-
 export function renderProjects(){
-    const projectElements = document.querySelector('.task-list');
-    projectElements.innerHTML = '';
-
-    projectList.forEach(project =>{
-        //Task Element
-        const listItem = document.createElement('div');
-        listItem.classList.add('task');
-        listItem.setAttribute('data-project', project.id);
-
-        const listItemTitle = document.createElement('h3');
-        listItemTitle.textContent = project.name;
-
-        //Task Options
-        const listItemOption = document.createElement('div');
-        listItemOption.classList.add('task-option');
-
-        const listItemEdit = document.createElement('button');
-        listItemEdit.classList.add('list-edit');
-        listItemEdit.innerHTML = `<img src="${edit}" alt="edit-icon">`;
-
-        const listItemDelete = document.createElement('button');
-        listItemDelete.classList.add('icon-delete');
-        listItemDelete.innerHTML = `<img src="${trash}" alt="delete-icon">`;
-
-
-        listItemDelete.addEventListener('click', ()=>{
-            deleteProject(project);
-        })
-
-        listItem.addEventListener('click', ()=>{
-            setSelectedProjectId(project);
-            renderTodo();
-        })
-
-        listItemOption.appendChild(listItemEdit);
-        listItemOption.appendChild(listItemDelete);
-    
-        listItem.appendChild(listItemTitle);
-        listItem.appendChild(listItemOption);
-
-        projectElements.appendChild(listItem);        
-    })
+    renderProjectsUI(projectList);
 }
 
 export function saveAndRender(){
-    renderProjects()
     save(projectList);
+    renderProjects();
 }
 
 export function addProject(project){
@@ -112,5 +36,10 @@ export function getSelectedProjectId(){
     return selectedProject;
 }
 
+export function updateProjectName(projectId, newName) {
+    const project = projectList.find(p => p.id === projectId);
+    if (!project || newName.trim() === '') return;
 
-export default loadList;
+    project.name = newName.trim();
+    saveAndRender(); 
+}
